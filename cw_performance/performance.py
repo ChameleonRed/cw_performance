@@ -208,7 +208,11 @@ class ProgressMeter(object):
         self.events += events
 
     def substract_total_event(self):
-        """Remove some total events to increase accuracy."""
+        """
+        Remove/skip one total event to increase accuracy.
+        You can skip very fast operations (i.e. cached operations).
+        It allows to focus on accurate measuring slow operations.
+        """
 
         if self.events == self.total_events:
             raise RuntimeError('Number of total events is smaller to events.')
@@ -218,7 +222,11 @@ class ProgressMeter(object):
         self.total_events -= 1
 
     def substract_total_events(self, events):
-        """Remove some total event to increase accuracy."""
+        """
+        Remove/skip some total events to increase accuracy.
+        You can skip very fast operations (i.e. cached operations).
+        It allows to focus on accurate measuring slow operations.
+        """
 
         if self.events > self.total_events - events:
             raise RuntimeError('Number of total events is smaller to events.')
