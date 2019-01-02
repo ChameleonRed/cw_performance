@@ -264,11 +264,11 @@ class ProgressMeter(object):
         :return: Statistics string.
         """
 
-        return ('done %s of %s, speed %s, predicted end %s',
+        return ('done %s of %s, speed %s, time left %s',
                 self.events,
                 self.total_events,
                 self.get_speed(),
-                self.get_seconds_left())
+                datetime.timedelta(seconds=self.get_seconds_left()))
 
     def stop(self, stop_time=None):
         """
