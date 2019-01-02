@@ -207,9 +207,9 @@ class ProgressMeter(object):
             raise RuntimeError('ProgressMeter is not started.')
         self.events += events
 
-    def substract_total_event(self):
+    def subtract_total_event(self):
         """
-        Remove/skip one total event to increase accuracy.
+        Remove/skip one total event to increase prediction accuracy.
         You can skip very fast operations (i.e. cached operations).
         It allows to focus on accurate measuring slow operations.
         """
@@ -221,9 +221,9 @@ class ProgressMeter(object):
             raise RuntimeError('ProgressMeter is not started.')
         self.total_events -= 1
 
-    def substract_total_events(self, events):
+    def subtract_total_events(self, events):
         """
-        Remove/skip some total events to increase accuracy.
+        Remove/skip some total events to increase prediction accuracy.
         You can skip very fast operations (i.e. cached operations).
         It allows to focus on accurate measuring slow operations.
         """
