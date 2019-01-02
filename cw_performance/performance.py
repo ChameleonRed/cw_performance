@@ -314,11 +314,11 @@ class ProgressMeter(object):
         seconds_left = self.get_seconds_left()
         speed = self.get_speed()
 
-        return 'done %s of %s %.2f%%, speed %s 1/s, operation %s s, time left %s' % (
+        return 'done %s of %s %.2f%%, speed %e 1/s, operation %s s, time left %s' % (
             self.events,
             self.total_events,
             self.get_progress(),
-            '%.2f' % speed if speed else None,
+            '%e' % speed if speed else None,
             datetime.timedelta(seconds=1.0 / speed) if speed else None,
             datetime.timedelta(seconds=seconds_left) if seconds_left else None)
 
