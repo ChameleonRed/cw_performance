@@ -184,6 +184,9 @@ class ProgressMeter(object):
     def add_event(self):
         """ Add event. """
 
+        if self.events == self.total_events:
+            raise RuntimeError('Number of events is larger than total events.')
+
         if not self.start_time:
             raise RuntimeError('ProgressMeter is not started.')
         self.events += 1
@@ -191,9 +194,44 @@ class ProgressMeter(object):
     def add_events(self, events):
         """ Add events. """
 
+        if self.events + events > self.total_events:
+            raise RuntimeError('Number of events is larger than total events.')
+
+        if not isinstance(events, int):
+            raise TypeError('events should integer.')
+
+        if events <= 0:
+            raise ValueError('events should be positive number.')
+
         if not self.start_time:
             raise RuntimeError('ProgressMeter is not started.')
         self.events += events
+
+    def substract_total_event(self):
+        """Remove some total events to increase accuracy."""
+
+        if self.events == self.total_events:
+            raise RuntimeError('Number of total events is smaller to events.')
+
+        if not self.start_time:
+            raise RuntimeError('ProgressMeter is not started.')
+        self.total_events -= 1
+
+    def substract_total_events(self, events):
+        """Remove some total event to increase accuracy."""
+
+        if self.events > self.total_events - events:
+            raise RuntimeError('Number of total events is smaller to events.')
+
+        if not isinstance(events, int):
+            raise TypeError('events should integer.')
+
+        if events <= 0:
+            raise ValueError('events should be positive number.')
+
+        if not self.start_time:
+            raise RuntimeError('ProgressMeter is not started.')
+        self.total_events -= events
 
     @classmethod
     def _delta_to_seconds(cls, delta):
