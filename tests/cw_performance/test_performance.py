@@ -81,6 +81,7 @@ class TestProgressMeter(unittest.TestCase):
 
         # first start
         s.start()
+        s.subtract_total_event()
         s.get_progress()
         s.get_seconds_left()
         s.get_statistics()
@@ -101,6 +102,7 @@ class TestProgressMeter(unittest.TestCase):
 
         # second start
         s.start()
+        s.subtract_total_event()
         s.get_progress()
         s.get_seconds_left()
         s.get_statistics()
@@ -119,7 +121,15 @@ class TestProgressMeter(unittest.TestCase):
         s.get_seconds()
 
     def test_is_not_started_add_event(self):
-        s = Speedometer()
+        s = ProgressMeter(total_events=100)
+        with self.assertRaises(RuntimeError):
+            s.add_event()
+
+        with self.assertRaises(RuntimeError):
+            s.add_events(2)
+
+        s.start()
+        s.stop()
         with self.assertRaises(RuntimeError):
             s.add_event()
 
@@ -127,7 +137,7 @@ class TestProgressMeter(unittest.TestCase):
             s.add_events(2)
 
     def test_is_not_started_stop(self):
-        s = Speedometer()
+        s = ProgressMeter(total_events=100)
         with self.assertRaises(RuntimeError):
             s.stop()
 

@@ -152,9 +152,6 @@ class ProgressMeter(object):
     stop()
     get_speed() -> previous + stop speed
 
-    Or reset:
-    reset()
-
     """
 
     SECONDS_PER_DAY = 24 * 60 * 60
@@ -184,15 +181,19 @@ class ProgressMeter(object):
     def add_event(self):
         """ Add event. """
 
+        if not self.start_time:
+            raise RuntimeError('ProgressMeter is not started.')
+
         if self.events == self.total_events:
             raise RuntimeError('Number of events is larger than total events.')
 
-        if not self.start_time:
-            raise RuntimeError('ProgressMeter is not started.')
         self.events += 1
 
     def add_events(self, events):
         """ Add events. """
+
+        if not self.start_time:
+            raise RuntimeError('ProgressMeter is not started.')
 
         if self.events + events > self.total_events:
             raise RuntimeError('Number of events is larger than total events.')
@@ -203,8 +204,6 @@ class ProgressMeter(object):
         if events <= 0:
             raise ValueError('events should be positive number.')
 
-        if not self.start_time:
-            raise RuntimeError('ProgressMeter is not started.')
         self.events += events
 
     def subtract_total_event(self):
@@ -214,11 +213,12 @@ class ProgressMeter(object):
         It allows to focus on accurate measuring slow operations.
         """
 
+        if not self.start_time:
+            raise RuntimeError('ProgressMeter is not started.')
+
         if self.events == self.total_events:
             raise RuntimeError('Number of total events is smaller to events.')
 
-        if not self.start_time:
-            raise RuntimeError('ProgressMeter is not started.')
         self.total_events -= 1
 
     def subtract_total_events(self, events):
@@ -227,6 +227,9 @@ class ProgressMeter(object):
         You can skip very fast operations (i.e. cached operations).
         It allows to focus on accurate measuring slow operations.
         """
+
+        if not self.start_time:
+            raise RuntimeError('ProgressMeter is not started.')
 
         if self.events > self.total_events - events:
             raise RuntimeError('Number of total events is smaller to events.')
@@ -237,8 +240,6 @@ class ProgressMeter(object):
         if events <= 0:
             raise ValueError('events should be positive number.')
 
-        if not self.start_time:
-            raise RuntimeError('ProgressMeter is not started.')
         self.total_events -= events
 
     @classmethod
@@ -311,9 +312,14 @@ class ProgressMeter(object):
         """
 
         seconds_left = self.get_seconds_left()
+        speed = self.get_speed()
 
-        return 'done %s of %s, speed %s, time left %s' % (
-            self.events, self.total_events, self.get_speed(),
+        return 'done %s of %s %.2f%%, speed %s 1/s, operation %s s, time left %s' % (
+            self.events,
+            self.total_events,
+            self.get_progress(),
+            '%.2f' % speed if speed else None,
+            datetime.timedelta(seconds=1.0 / speed) if speed else None,
             datetime.timedelta(seconds=seconds_left) if seconds_left else None)
 
     def stop(self, stop_time=None):
@@ -321,6 +327,9 @@ class ProgressMeter(object):
         Stop speed measuring.
         :param stop_time: Stop time if None it is now.
         """
+
+        if self.start_time is None:
+            raise RuntimeError('ProgressMeter is not started.')
 
         if stop_time:
             self.stop_time = stop_time
