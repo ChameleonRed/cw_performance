@@ -266,11 +266,9 @@ class ProgressMeter(object):
 
         seconds_left = self.get_seconds_left()
 
-        return ('done %s of %s, speed %s, time left %s',
-                self.events,
-                self.total_events,
-                self.get_speed(),
-                datetime.timedelta(seconds=seconds_left) if seconds_left else None)
+        return 'done %s of %s, speed %s, time left %s' % (
+            self.events, self.total_events, self.get_speed(),
+            datetime.timedelta(seconds=seconds_left) if seconds_left else None)
 
     def stop(self, stop_time=None):
         """
