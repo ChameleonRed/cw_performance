@@ -314,7 +314,7 @@ class ProgressMeter(object):
         seconds_left = self.get_seconds_left()
         speed = self.get_speed()
 
-        return 'done %s of %s %.2f%%, speed %e 1/s, operation %s s, time left %s' % (
+        return 'done %s of %s %.2f%%, speed %s 1/s, operation %s s, time left %s' % (
             self.events,
             self.total_events,
             self.get_progress(),
