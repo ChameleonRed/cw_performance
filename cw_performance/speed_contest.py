@@ -33,7 +33,7 @@ class SpeedContest(object):
         self.functions.append(ContestFunction(test, setup))
 
     def timeit_functions(self, timer=timeit.default_timer, number=timeit.default_number,
-               verbose=False):
+                         verbose=False):
         """ Measure speed on functions with use time it and show winner. """
 
         if verbose:
@@ -41,24 +41,28 @@ class SpeedContest(object):
         for function in self.functions:
             function.result = timeit.timeit(function.test, function.setup, timer=timer, number=number)
             if verbose:
-                print(function.test.__name__, function.result)
+                print('%s %.3e' % (function.test.__name__, function.result))
 
         max_time = max(x.result for x in self.functions)
         min_time = min(x.result for x in self.functions)
         functions = sorted(self.functions, key=lambda x: x.result, reverse=True)
 
         if verbose:
-            print('Speed contest winners.')
+            print()
+            print('Speed contest winners (the best is the last).')
+            print('name, result, relative to maximum, relative to minimum')
             for function in functions:
-                print(function.test.__name__,
-                      function.result,
-                      function.result / max_time,
-                      function.result / min_time)
+                print('%s %.3e %.3f %.3f' % (
+                    function.test.__name__,
+                    function.result,
+                    function.result / max_time,
+                    function.result / min_time
+                ))
 
         return functions, max_time, min_time
 
     def repeat_functions(self, timer=timeit.default_timer, number=timeit.default_number, repeat=timeit.default_repeat,
-               verbose=False):
+                         verbose=False):
         """ Measure speed with use repeat on functions and show winner. """
 
         if verbose:
@@ -66,19 +70,23 @@ class SpeedContest(object):
         for function in self.functions:
             function.result = timeit.repeat(function.test, function.setup, timer=timer, number=number, repeat=repeat)
             if verbose:
-                print(function.test.__name__, function.result)
+                print('%s %.3e' % (function.test.__name__, function.result))
 
         max_time = max(sum(x.result) for x in self.functions)
         min_time = max(sum(x.result) for x in self.functions)
         functions = sorted(self.functions, key=lambda x: sum(x.result),reverse=True)
 
         if verbose:
-            print('Speed contest winners.')
+            print()
+            print('Speed contest winners (the best is the last).')
+            print('name, result, relative to maximum, relative to minimum')
             for function in functions:
-                print(function.test.__name__,
-                      sum(function.result),
-                      sum(function.result) / max_time,
-                      sum(function.result) / min_time)
+                print('%s %.3e %.3f %.3f' % (
+                    function.test.__name__,
+                    function.result,
+                    function.result / max_time,
+                    function.result / min_time
+                ))
 
         return functions, max_time, min_time
 
