@@ -53,7 +53,7 @@ class Speedometer(object):
         else:
             self.start_time = datetime.datetime.utcnow()
         self.stop_time = None
-        if self.events is None or self.seconds:
+        if self.events is None or self.seconds is None:
             self.events = 0
             self.seconds = 0.0
 
@@ -127,7 +127,7 @@ class Speedometer(object):
         delta = self.stop_time - self.start_time
         seconds = self._delta_to_seconds(delta)
         # add previous seconds
-        self.seconds += seconds + self.seconds
+        self.seconds += seconds
         # reset times
         self.start_time = None
         self.stop_time = None
