@@ -20,6 +20,12 @@ class ContestFunction(object):
         self.result = None
         "Result of function."
 
+    def __repr__(self):
+        return (f'{self.__class__.__qualname__}('
+                f'test={self.test!r}, '
+                f'setup={self.setup!r}, '
+                f'result={self.result!r})')
+
 
 class SpeedContest(object):
     """ Speed contest for functions. """
