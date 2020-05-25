@@ -1,4 +1,6 @@
 .idea/
+__pychache__/
 *.egg-info/
 build/
 dist/
+*.pyc
