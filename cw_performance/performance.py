@@ -5,6 +5,7 @@ __license__ = 'Apache License 2.0'
 __version__ = '1.0'
 
 import datetime
+import time
 
 
 class Speedometer(object):
@@ -31,8 +32,6 @@ class Speedometer(object):
 
     """
 
-    SECONDS_PER_DAY = 24 * 60 * 60
-
     def __init__(self):
         self.start_time = None
         self.stop_time = None
@@ -51,7 +50,7 @@ class Speedometer(object):
         if start_time:
             self.start_time = start_time
         else:
-            self.start_time = datetime.datetime.utcnow()
+            self.start_time = time.perf_counter()
         self.stop_time = None
         if self.events is None or self.seconds is None:
             self.events = 0
@@ -71,11 +70,6 @@ class Speedometer(object):
             raise RuntimeError('Speedometer is not started.')
         self.events += events
 
-    @classmethod
-    def _delta_to_seconds(cls, delta):
-        seconds = delta.days * cls.SECONDS_PER_DAY + delta.seconds + delta.microseconds / 1e6
-        return seconds
-
     def get_events(self):
         """
         Get total events counter since last reset.
@@ -92,9 +86,8 @@ class Speedometer(object):
 
         # get total + current speed
         if self.start_time:
-            now = datetime.datetime.utcnow()
-            delta = now - self.start_time
-            seconds = self._delta_to_seconds(delta)
+            now = time.perf_counter()
+            seconds = now - self.start_time
             # add previous seconds
             seconds += self.seconds
             return seconds
@@ -123,9 +116,8 @@ class Speedometer(object):
         if stop_time:
             self.stop_time = stop_time
         else:
-            self.stop_time = datetime.datetime.utcnow()
-        delta = self.stop_time - self.start_time
-        seconds = self._delta_to_seconds(delta)
+            self.stop_time = time.perf_counter()
+        seconds = self.stop_time - self.start_time
         # add previous seconds
         self.seconds += seconds
         # reset times
@@ -154,8 +146,6 @@ class ProgressMeter(object):
 
     """
 
-    SECONDS_PER_DAY = 24 * 60 * 60
-
     def __init__(self, total_events):
         self.total_events = total_events
         self.start_time = None
@@ -172,7 +162,7 @@ class ProgressMeter(object):
         if start_time:
             self.start_time = start_time
         else:
-            self.start_time = datetime.datetime.utcnow()
+            self.start_time = time.perf_counter()
         self.stop_time = None
         if self.events is None or self.seconds:
             self.events = 0
@@ -242,11 +232,6 @@ class ProgressMeter(object):
 
         self.total_events -= events
 
-    @classmethod
-    def _delta_to_seconds(cls, delta):
-        seconds = delta.days * cls.SECONDS_PER_DAY + delta.seconds + delta.microseconds / 1e6
-        return seconds
-
     def get_events(self):
         """
         Get total events counter since last reset.
@@ -263,9 +248,8 @@ class ProgressMeter(object):
 
         # get total + current speed
         if self.start_time:
-            now = datetime.datetime.utcnow()
-            delta = now - self.start_time
-            seconds = self._delta_to_seconds(delta)
+            now = time.perf_counter()
+            seconds = now - self.start_time
             # add previous seconds
             seconds += self.seconds
             return seconds
@@ -297,7 +281,7 @@ class ProgressMeter(object):
         """
 
         speed = self.get_speed()
-        if speed is None:
+        if speed is None or speed == 0.0:
             return None
 
         events_left = self.total_events - self.events
@@ -334,9 +318,8 @@ class ProgressMeter(object):
         if stop_time:
             self.stop_time = stop_time
         else:
-            self.stop_time = datetime.datetime.utcnow()
-        delta = self.stop_time - self.start_time
-        seconds = self._delta_to_seconds(delta)
+            self.stop_time = time.perf_counter()
+        seconds = self.stop_time - self.start_time
         # add previous seconds
         self.seconds += seconds + self.seconds
         # reset times
