@@ -76,10 +76,10 @@ class SpeedContest(object):
         for function in self.functions:
             function.result = timeit.repeat(function.test, function.setup, timer=timer, number=number, repeat=repeat)
             if verbose:
-                print('%s %.3e' % (function.test.__name__, function.result))
+                print('%s %.3e' % (function.test.__name__, sum(function.result) / len(function.result)))
 
-        max_time = max(sum(x.result) for x in self.functions)
-        min_time = max(sum(x.result) for x in self.functions)
+        max_time = max(max(x.result) for x in self.functions)
+        min_time = min(min(x.result) for x in self.functions)
         functions = sorted(self.functions, key=lambda x: sum(x.result),reverse=True)
 
         if verbose:
@@ -89,9 +89,9 @@ class SpeedContest(object):
             for function in functions:
                 print('%s %.3e %.3f %.3f' % (
                     function.test.__name__,
-                    function.result,
-                    function.result / max_time,
-                    function.result / min_time
+                    sum(function.result) / len(function.result),
+                    max(function.result) / max_time,
+                    min(function.result) / min_time
                 ))
 
         return functions, max_time, min_time
